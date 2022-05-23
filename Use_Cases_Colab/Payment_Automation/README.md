@@ -23,7 +23,7 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 3. Choose the folder with the "Payment_Automation" name.
 
-4. Import the payment_automation.ipynb sample file into your Google Drive.
+4. Select and import the xxx_Payment.ipynb sample file from one of available folders into your Google Drive.
 
 5. Open config.csv file and input your client credentials by replacing the highlighted items with your client_id and client_secret, separated by the coma. Config file should look like this:
 

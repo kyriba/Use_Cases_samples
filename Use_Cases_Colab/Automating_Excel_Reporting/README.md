@@ -23,7 +23,7 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 3. Choose the folder with the "Automating_Excel_Reporting" name.
 
-4. Import the automate-excel-reporting.ipynb sample file into your Google Drive.
+4. Import the Demo ORS.ipynb sample file into your Google Drive.
 
 5. Open config.csv file and input your client credentials by replacing the highlighted items with your client_id and client_secret, separated by the coma. Config file should look like this:
 

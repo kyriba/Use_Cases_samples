@@ -35,5 +35,7 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 8. Run the application. You can run the whole application: Runtime -> Run all, or execute separated cells.
 
+9. When "List of Process Templates listed in the excel file" cell runs it requires to upload xlsx file. Choose "UseCase Template.xlsx" from  Automating_Excel_Reporting folder.
+
 > ⚠️  _Please notice that Python is a script language and code will be executed row by row or in the order you will run the cells._
 

@@ -21,9 +21,9 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 2. Proceed to Use_Cases_Colab folder.
 
-3. Choose the folder with the "Automating_Excel_Reporting" name.
+3. Choose the folder with the "Forecast_Monitoring_Automation" name.
 
-4. Import the Demo ORS.ipynb sample file into your Google Drive.
+4. Import the Forecast Monitoring.ipynb sample file into your Google Drive.
 
 5. Open config.csv file and input your client credentials by replacing the highlighted items with your client_id and client_secret, separated by the coma. Config file should look like this:
 

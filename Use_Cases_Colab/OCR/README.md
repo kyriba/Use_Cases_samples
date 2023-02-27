@@ -35,7 +35,7 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 8. Run the application. You can run the whole application: Runtime -> Run all, or execute separated cells.
 
-9. When "Upload invoice in PDF format" runs it is required to upload invoice file in pdpf format. Choose "Invoice Sample - Use Case.pdf" file inside ORC folder. 
+9. When "Upload invoice in PDF format" runs it is required to upload invoice file in pdf format. Choose "Invoice Sample - Use Case.pdf" file inside OCR folder. 
 
 > ⚠️  _Please notice that Python is a script language and code will be executed row by row or in the order you will run the cells._
 

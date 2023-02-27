@@ -21,9 +21,9 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 2. Proceed to Use_Cases_Colab folder.
 
-3. Choose the folder with the "Automating_Excel_Reporting" name.
+3. Choose the folder with the "OCR" name.
 
-4. Import the Demo ORS.ipynb sample file into your Google Drive.
+4. Import the OCR.ipynb sample file into your Google Drive.
 
 5. Open config.csv file and input your client credentials by replacing the highlighted items with your client_id and client_secret, separated by the coma. Config file should look like this:
 
@@ -34,6 +34,8 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 7. In the Table of Content on the left, click on the folder logo ![files](files.png) which opens Files section, then press on the file upload icon ![upload](upload.png) and select the amended config.csv.
 
 8. Run the application. You can run the whole application: Runtime -> Run all, or execute separated cells.
+
+9. When "Upload invoice in PDF format" runs it is required to upload invoice file in pdf format. Choose "Invoice Sample - Use Case.pdf" file inside OCR folder. 
 
 > ⚠️  _Please notice that Python is a script language and code will be executed row by row or in the order you will run the cells._
 

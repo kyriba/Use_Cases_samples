@@ -1,0 +1,933 @@
+{
+	"info": {
+		"_postman_id": "d62c49ea-9d6b-4c29-8507-ba59caa2df07",
+		"name": "Payment Initiation Service API",
+		"description": "Payment initiation is the process of initiating a payment transaction  \non behalf of a customer through a payment initiation service API.\n\nA payment initiation request typically includes information about the payment,  \nsuch as the amount, currency, payment recipient, and payment purpose.  \nOnce the payment initiation request is received by the party service actual accounts (Bank or Wallet),  \nit is processed and the payment status is updated accordingly.\n\nPayment status refers to the current status of a payment transaction. This status is updated  \nas the payment is processed, and it may include information about whether the payment  \nwas successful or not, whether it is still pending, and any error messages that may have occurred.\n\nPayment status information is typically provided through the payment status  \nupdate endpoint. By monitoring the payment status, service providers can provide  \ntheir customers with up-to-date information about the progress of their payments and  \nensure that any issues are promptly addressed.\n\nContact Support:  \nName: Bank API team  \nEmail: [bank_api_team@kyriba.com](https://mailto:bank_api_team@kyriba.com)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23738130"
+	},
+	"item": [
+		{
+			"name": "Step 1: Collection configuration",
+			"item": [],
+			"description": "Set your [<b>Base URL</b>](https://kyriba.constellant.org/site/documentation/glossary/#baseurl) to the baseUrl collection variable.\n\nOptionally, set up authorization. Go to the Authorization tab of the collection."
+		},
+		{
+			"name": "Step 2: Request a list of available banks",
+			"item": [
+				{
+					"name": "read Payment Initiation Endpoints",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request contains required header: Accept\", function () {",
+									"    pm.request.to.have.header(\"Accept\");",
+									"});",
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains required fields: metadata and results\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.metadata).to.be.an('object');",
+									"    pm.expect(responseData.results).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Metadata contains required fields: count, total, limit, offset and links\", function () {",
+									"    const responseMetadata = pm.response.json().metadata;",
+									"    pm.expect(responseMetadata.count).to.be.a('number');",
+									"    pm.expect(responseMetadata.total).to.be.a('number');",
+									"    pm.expect(responseMetadata.limit).to.be.a('number');",
+									"    pm.expect(responseMetadata.offset).to.be.a('number');",
+									"    pm.expect(responseMetadata.links).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Metadata's links contains required fields: current, next and prev\", function () {",
+									"    const responseMetadataLinks = pm.response.json().metadata.links;",
+									"    pm.expect(responseMetadataLinks.current).to.be.a('string');",
+									"    pm.expect(responseMetadataLinks).to.have.property('next');",
+									"    pm.expect(responseMetadataLinks).to.have.property('prev')",
+									"});",
+									"",
+									"pm.test(\"Results contains required fields: - id, name, and title\", function () {",
+									"    const results = pm.response.json().results;",
+									"    ",
+									"    results.forEach(function(result) {",
+									"        pm.expect(result.id).to.be.a('string');",
+									"        pm.expect(result.name).to.be.a('string');",
+									"        pm.expect(result.title).to.be.a('string');",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Results's id is uuid\", function () {",
+									"    const results = pm.response.json().results;",
+									"    ",
+									"    results.forEach(function(result) {",
+									"        pm.expect(result.id).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/spi/bank-connectivity/payment-initiation/v1/banks?offset=0&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spi",
+								"bank-connectivity",
+								"payment-initiation",
+								"v1",
+								"banks"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Introspects service provider."
+					},
+					"response": [
+						{
+							"name": "The list of endpoints provided by service provider.",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/banks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"banks"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"metadata\": {\n    \"value\": \"reference #/components/schemas/PageMetadata not found in the OpenAPI spec\"\n  },\n  \"results\": [\n    {\n      \"id\": \"<uuid>\",\n      \"name\": \"2c9\",\n      \"title\": \"<string>\"\n    },\n    {\n      \"id\": \"<uuid>\",\n      \"name\": \"d\",\n      \"title\": \"<string>\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/banks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"banks"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "403 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/banks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"banks"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Step 3: Send a payment",
+			"item": [
+				{
+					"name": "initiate Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request contains required header: Kyriba-Context\", function () {",
+									"    pm.request.to.have.header(\"Kyriba-Context\");",
+									"});",
+									"",
+									"pm.test(\"Request contains required header: Idempotency-Key\", function () {",
+									"    pm.request.to.have.header(\"Idempotency-Key\");",
+									"});",
+									"",
+									"pm.test(\"Request contains required header: Content-Type\", function () {",
+									"    pm.request.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Request contains required header: Accept\", function () {",
+									"    pm.request.to.have.header(\"Accept\");",
+									"});",
+									"",
+									"const requestBody = JSON.parse(pm.request.body.raw);",
+									"",
+									"pm.test(\"Request contains required fields: remittance\", function () {",
+									"    pm.expect(requestBody).to.be.an('object');",
+									"    pm.expect(requestBody.remittance).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Remittance object contains required fields: format, subFormat, payload\", function () {",
+									"    pm.expect(requestBody.remittance.format).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.subFormat).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.payload).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Payload object contains required fields: encryption, compression, body\", function () {",
+									"    pm.expect(requestBody.remittance.payload.encryption).to.be.an('object');",
+									"    pm.expect(requestBody.remittance.payload.compression).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.payload.body).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body object contains required fields: content, contentEncoding\", function () {",
+									"    pm.expect(requestBody.remittance.payload.body.content).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.payload.body.contentEncoding).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Body object contains required fields: content, contentEncoding\", function () {",
+									"    pm.expect(requestBody.remittance.payload.body.content).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.payload.body.contentEncoding).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Encryption object contains required fields: algorithm, compression, body\", function () {",
+									"    pm.expect(requestBody.remittance.payload.encryption.algorithm).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.payload.encryption.keyName).to.be.a('string');",
+									"    pm.expect(requestBody.remittance.payload.encryption.initialVector).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"pm.test(\"Reponse contains required field: id\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Response's id is uuid\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+								"key": "Kyriba-Context",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJDTVAxMUBqcG1jIiwiYXVkIjoiaHR0cDovL2JhbmthcGktcGF5bWVudC1wcm92aWRlci5jb20iLCJraWQiOiJzaWduYXR1cmUta2V5LTAxMDEyNCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTMwMiIsInBheWxvYWRfaGFzaCI6IjI1MWU5ZWYwYzc4ZDcwZDZiMDVkMDUzOWE4ZWJiMjBjYzM5NmQ4OWQ1NWNjZDMzNTIyMmVmZGZkNDMyM2M2NzMiLCJleHAiOjI2MjU2MTA0NzksImlhdCI6MTcxMDI1MDQ3OSwianRpIjoiOTFmOTk5MWItMWEyZC00NjdjLWIyMDQtODY4OTZiMGU3OTlmIn0.lyauAbpMotNXSf14kgVDl2MluAVm8reV2zLUOnCLNrI8HAOGlirC1WGcEtI2H110Tpnt8U1d-WoNc8AqiWymjdU5AAXbwOw8eQvZNY0fWmOWAsTJRsAmFBglisgR-eA3mXYVOLDhY03rpu4FvxAkQJmmEjfj3uf9m0OALcp8ABxNAoPEoqhiTSvELiJAx8IsKyFFLOIRX8dferjMZCtgYVJ-CUVzfxt0Mm7T6PaV_6redTWKi4Y62liinPXbO0rK5RCfqQ8AJVvjX4VuG2Z8nwXFRGeXUkwyssyiAwQHo9QgulEqJ7vp3HLo4QZaNKO9RYtdHYAoGbMlBe8Bp34Xdw"
+							},
+							{
+								"description": "(Required) An identifier for service provider to \nreject duplicated payment initiations.\n",
+								"key": "Idempotency-Key",
+								"value": "GB49BARC20195473145199-1234567890123456"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"remittance\": {\n        \"format\": \"XML Pain ISO 2019\",\n        \"subFormat\": \"Standard CGI compliant\",\n        \"payload\": {\n            \"encryption\": {\n                \"algorithm\": \"AES-256-GCM\",\n                \"keyName\": \"payment-provider-010124\",\n                \"initialVector\": \"ed7e7908bc628d452ee58178\"\n            },\n            \"compression\": \"gzip\",\n            \"body\": {\n                \"content\": \"keTUS1Pn2owk3gBZRU1jP+7UNhgjz6SCf8GL4KtmDT4U8tEgSWGxXFwwvEIrLMWgkSmFJX0MQYNRH2MbtkijMDciyWbzqJyv7tPl3FITMnQAp2y5EUrTctnL23IhekG2JUQzN9xGBf1/qkYLNuQJ42thzgdPeWADrfWbhZt+dwRzhH07LuC/0Xs6AQd5CAISEv6db2bO+FJiRsV2KKeTl+NISOjhHP/3K4E80IEaj2BsSFDr7EeTc70GTpTbLmIsV0NLYMQ1laBNlHgTE35r+h4Grz2tn1Egsa8qdPLpVKQf98IYEvkZ4vpkOIxqKlbBXkO2EFDL4IXXIdmmFCHdl5qPzssBNTpcKuKlKPRIjuO48wfifLNRzDRjuLAvgmxCMldmsXM0ER9JRJ55YmTP/enBO7usV5HXVwj9E3sq4/pL/Eoxt1nVcAqI2oEaQ5GT0qg+k+CCYLeqdz+0zCGmG9R9lvGHBRgQlemobOGLfqWPsh5S/SqDrTdKmHTu2jx8A5slq3R6YFyFpG6uNTFy5XBq1i54xlMuixgeBIcDuiJ+gjj6aWjH6B20yYknmV98o/EG/lKRUdy+PA1yJ129LemM/D8HsGz0Qm6eyLuu7SNUHpIuBTDPDgHZ2QQwy7UGMkwaR7jfzNvVZuDpMCVwMCzf9RGFdgxa/YY6xVIXEf0QzUvzvc4zDTjCtWNpHDgKKTZKspJVsYFHLSTKFsuUD4Fo35thebyuMEGuhnrM4SsV1MecYYQcfGGeFBQp4fOtIQ5w6FqGsyxu6k5TeiskpofpIxtC9BJERxAD61DzjXfDsO6Roy8bsZw5fSRjYHwFoN/kpsMEbrRZzLFWDGSNSlpQddZUvrK5GGR9G7j8Q63OexiV/wLj48KwECpQgIWeUh0SvqYZGX9zW7vlRit89mJRZgXKijUH3to=\",\n                \"contentEncoding\": \"base64\"\n            },\n            \"resource\": null\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/spi/bank-connectivity/payment-initiation/v1/bank/:bankNameOrId/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spi",
+								"bank-connectivity",
+								"payment-initiation",
+								"v1",
+								"bank",
+								":bankNameOrId",
+								"payments"
+							],
+							"variable": [
+								{
+									"key": "bankNameOrId",
+									"value": "jpmc"
+								}
+							]
+						},
+						"description": "Submits request for payment initiation."
+					},
+					"response": [
+						{
+							"name": "Payment initialization is created. Further status updates are expected.",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "(Required) An identifier for service provider to \nreject duplicated payment initiations.\n",
+										"key": "Idempotency-Key",
+										"value": "a8g"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"remittance\": {\n    \"format\": \"<string>\",\n    \"subFormat\": \"<string>\",\n    \"payload\": {\n      \"value\": \"reference #/components/schemas/EmbeddablePayload not found in the OpenAPI spec\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"0cVfzz1qOdD\"\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "(Required) An identifier for service provider to \nreject duplicated payment initiations.\n",
+										"key": "Idempotency-Key",
+										"value": "a8g"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"remittance\": {\n    \"format\": \"<string>\",\n    \"subFormat\": \"<string>\",\n    \"payload\": {\n      \"value\": \"reference #/components/schemas/EmbeddablePayload not found in the OpenAPI spec\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "403 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "(Required) An identifier for service provider to \nreject duplicated payment initiations.\n",
+										"key": "Idempotency-Key",
+										"value": "a8g"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"remittance\": {\n    \"format\": \"<string>\",\n    \"subFormat\": \"<string>\",\n    \"payload\": {\n      \"value\": \"reference #/components/schemas/EmbeddablePayload not found in the OpenAPI spec\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "404 response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "(Required) An identifier for service provider to \nreject duplicated payment initiations.\n",
+										"key": "Idempotency-Key",
+										"value": "a8g"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"remittance\": {\n    \"format\": \"<string>\",\n    \"subFormat\": \"<string>\",\n    \"payload\": {\n      \"value\": \"reference #/components/schemas/EmbeddablePayload not found in the OpenAPI spec\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Step 4: Request the payment status",
+			"item": [
+				{
+					"name": "read Payment Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request contains required header: Kyriba-Context\", function () {",
+									"    pm.request.to.have.header(\"Kyriba-Context\");",
+									"});",
+									"",
+									"pm.test(\"Request contains required header: Accept\", function () {",
+									"    pm.request.to.have.header(\"Accept\");",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"pm.test(\"Response contains required fields: status\", function () {",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.status).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Status object contains required fields: format, payload\", function () {",
+									"    pm.expect(responseData.status.format).to.be.a('string');",
+									"    pm.expect(responseData.status.payload).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Payload object contains required fields: encryption, compression, body\", function () {",
+									"    pm.expect(responseData.status.payload.encryption).to.be.an('object');",
+									"    pm.expect(responseData.status.payload.compression).to.be.a('string');",
+									"    pm.expect(responseData.status.payload.body).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body object contains required fields: content, contentEncoding\", function () {",
+									"    pm.expect(responseData.status.payload.body.content).to.be.a('string');",
+									"    pm.expect(responseData.status.payload.body.contentEncoding).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Body object contains required fields: content, contentEncoding\", function () {",
+									"    pm.expect(responseData.status.payload.body.content).to.be.a('string');",
+									"    pm.expect(responseData.status.payload.body.contentEncoding).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Encryption object contains required fields: algorithm, compression, body\", function () {",
+									"    pm.expect(responseData.status.payload.encryption.algorithm).to.be.a('string');",
+									"    pm.expect(responseData.status.payload.encryption.keyName).to.be.a('string');",
+									"    pm.expect(responseData.status.payload.encryption.initialVector).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+								"key": "Kyriba-Context",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJDTVAxMUBqcG1jIiwiYXVkIjoiaHR0cDovL2JhbmthcGktcGF5bWVudC1wcm92aWRlci5jb20iLCJraWQiOiJzaWduYXR1cmUta2V5LTAxMDEyNCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTMwMiIsImV4cCI6MjYyNTYxMDY3NCwiaWF0IjoxNzEwMjUwNjc0LCJqdGkiOiIwMzZmMDJhYi00MGViLTRlNzAtYTFmYy1hZmVkMDM0YTMyODUifQ.U2J8-W9Ea4nmVqcv0Xyc0wQUZIdZu05y4neZBFnc8_bqSzo8FOSMbcwYsUxeYc6ZQhKS7olUSDa6Ztw7TkXWi6qZa8lmxbSS8jVZZLYOCjsOaczxLQ_o7N99rv8aZY52-z58uXntaaHtrFmdNtous3XEfHU-W84d1_R-9q6cuusElgVt-mAzF7Ke2pmFr4QmoNbcDz5ySEAMjgXAgS3KPdpplCrvC7DB0ZDh_QHdVfgPaR0heJupfX8jpdR529dAUhjIKLgGvdiO9xOqPn8LgB5d4wZqt88OQOL1U4ODawNyXZIpH_3ruHAlwR5GKNh70fZRtX0cc1-_8tjd35mgzg"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/spi/bank-connectivity/payment-initiation/v1/bank/:bankNameOrId/payments/:paymentId/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spi",
+								"bank-connectivity",
+								"payment-initiation",
+								"v1",
+								"bank",
+								":bankNameOrId",
+								"payments",
+								":paymentId",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "bankNameOrId",
+									"value": "jpmc"
+								},
+								{
+									"key": "paymentId",
+									"value": "d808750e-7d8d-45d8-84a1-254c36cf227a"
+								}
+							]
+						},
+						"description": "Reads payment status."
+					},
+					"response": [
+						{
+							"name": "Status of payment.",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments/:paymentId/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments",
+										":paymentId",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										},
+										{
+											"key": "paymentId"
+										}
+									]
+								}
+							},
+							"status": "Accepted",
+							"code": 202,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": {\n    \"format\": \"<string>\",\n    \"payload\": {\n      \"value\": \"reference #/components/schemas/EmbeddablePayload not found in the OpenAPI spec\"\n    }\n  }\n}"
+						},
+						{
+							"name": "400 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments/:paymentId/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments",
+										":paymentId",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										},
+										{
+											"key": "paymentId"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "403 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments/:paymentId/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments",
+										":paymentId",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										},
+										{
+											"key": "paymentId"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "404 response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "(Required) A JWT token to identify Kyriba customer using service provider.\nClaims:\n * iss - \"https://<platform>.treasury-factory.com/gateway\"\n * sub - \"<CUSTOMER>@<CONNECTIVITY NAME>\"\n * aud - \"<SERVICE PROVIDER BASE URL>\"\n * kid - name of a key used during signature (identifier used to distinguish keys, useful to distinguish set of keys used during rotation). Should be ending with “-<ddmmyy>“, representing the date when key was generated\n * exp - expiration time\n * iat - issued at time\n * jti - lower-case 32 hex digit unique token identifier\n * payload_hash - SHA256 of an original formatted, but not encrypted or compressed payload\n",
+										"key": "Kyriba-Context",
+										"value": "<string>"
+									},
+									{
+										"description": "Added as a part of security scheme: oauth2",
+										"key": "Authorization",
+										"value": "<token>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bank/:bankNameOrId/payments/:paymentId/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bank",
+										":bankNameOrId",
+										"payments",
+										":paymentId",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "bankNameOrId"
+										},
+										{
+											"key": "paymentId"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "bank-initiation-services-scope",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "/oauth/token",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "/internal/bankapi/payment-provider/v1"
+		}
+	]
+}

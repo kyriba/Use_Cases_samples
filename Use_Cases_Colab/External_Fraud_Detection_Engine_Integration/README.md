@@ -23,7 +23,7 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 3. Choose the folder with the "Forecast_Monitoring_Automation" name.
 
-4. Import the Forecast Monitoring.ipynb sample file into your Google Drive.
+4. Import the External_Fraud_Detection_Engine_Integration.ipynb sample file into your Google Drive.
 
 5. Open config.csv file and input your client credentials by replacing the highlighted items with your client_id and client_secret, separated by the coma. Config file should look like this:
 

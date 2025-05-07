@@ -21,7 +21,7 @@ git clone https://github.com/kyriba/Use_Cases_samples.git
 
 2. Proceed to Use_Cases_Colab folder.
 
-3. Choose the folder with the "Forecast_Monitoring_Automation" name.
+3. Choose the folder with the "External_Fraud_Detection_Engine_Integration" name.
 
 4. Import the Forecast Monitoring.ipynb sample file into your Google Drive.
 

@@ -1,0 +1,2 @@
+client_id,client_secret,token_url,base_url
+YOUR_CLIENT_ID,YOUR_CLIENT_SECRET,https://demo.kyriba.com/gateway/oauth/token,https://demo.kyriba.com/gateway/api
